@@ -10,6 +10,7 @@ import modelo.Alumno.Nivel;
 
 public class ES_Alumnos {
 	private static Scanner teclado = new Scanner(System.in);
+	private static final String tablaAlumnos = "alumnosApartado2";
 
 	// CREACION ALUMNOS A PARTIR DE LOS DATOS INSERTADOS POR TECLADO
 	public static Alumno leeAlumnoDeTeclado() {
@@ -41,12 +42,13 @@ public class ES_Alumnos {
 		return alumno;
 	} // leeAlumnoDeTeclado
 
-	public static Clase leerAlumnosBBDD(Connection conexionDB) {
+	// RECORREMOS LA TABLA Y INSTANCIAMOS ALUMNOS
+	public static Clase leerAlumnosBBDD(Connection conexionBBDD) {
 		Clase clase = new Clase();
 		Alumno alumno = null;
-		String query = "SELECT * FROM alumnosGestorFinal";
+		String query = "SELECT * FROM " + tablaAlumnos;
 
-		try (PreparedStatement selectStatement = conexionDB.prepareStatement(query);
+		try (PreparedStatement selectStatement = conexionBBDD.prepareStatement(query);
 			 ResultSet resultado = selectStatement.executeQuery()) {
 			if(!resultado.isBeforeFirst()) {
 				return null;
@@ -64,10 +66,11 @@ public class ES_Alumnos {
         return clase;
 	}
 
-	public static void guardarAlumnosBBDD(Connection conexion, Clase clase) {
-		String lineaSQL = "INSERT INTO alumnosGestorFinal (dni, nombre, nota, nivel) VALUES (?, ?, ?, ?);";
+	// GUARDAMOS LOS ALUMNOS DE LA CLASE EN LA BBDD
+	public static void guardarAlumnosBBDD(Connection conexionBBDD, Clase clase) {
+		String lineaSQL = "INSERT INTO " + tablaAlumnos + " (dni, nombre, nota, nivel) VALUES (?, ?, ?, ?);";
 		Alumno alumno = null;
-		try(PreparedStatement insertStatement = conexion.prepareStatement(lineaSQL)) {
+		try(PreparedStatement insertStatement = conexionBBDD.prepareStatement(lineaSQL)) {
 			for(int i = 0; i < clase.size(); i++) {
 				alumno = clase.getAlumno(i);
 				insertarAlumno(alumno, insertStatement);
@@ -85,6 +88,7 @@ public class ES_Alumnos {
 			insertStatement.setString(4, "CFGS");
 			insertStatement.executeUpdate();
         } catch (SQLException _) {
+			// En caso de que el alumno ya este registrado en la BBDD
         }
 	}
 
@@ -100,14 +104,15 @@ public class ES_Alumnos {
         }
     }
 
-	public static void inicializarBBDD(Connection conexion) {
-		String lineaSQL = "CREATE TABLE IF NOT EXISTS alumnosGestorFinal ("
-				+ "dni VARCHAR(50), "
+	// EN CASO DE NO EXISTIR LA TABLA SE CREA
+	public static void inicializarBBDD(Connection conexionBBDD) {
+		String lineaSQL = "CREATE TABLE IF NOT EXISTS " + tablaAlumnos + " ("
+				+ "dni VARCHAR(20) PRIMARY KEY, "
 				+ "nombre VARCHAR(50), "
 				+ "nota FLOAT, "
 				+ "nivel ENUM('FPB', 'CFGM', 'CFGS')"
 				+ ");";
-        try (PreparedStatement createStatement = conexion.prepareStatement(lineaSQL)) {
+        try (PreparedStatement createStatement = conexionBBDD.prepareStatement(lineaSQL)) {
 			createStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
