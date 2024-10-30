@@ -1,15 +1,13 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
     private static Connection conexionBBDD;
-    private static final String urlDB = "jdbc:mysql://localhost:3306/adat7";;
+    private static final String urlDB = "jdbc:mysql://localhost:3306/adat7";
     private static final String usuario = "dam2";
     private static final String password = "asdf.1234";
     private static int opcion;
@@ -90,30 +88,32 @@ public class Main {
         switch (opcion) {
             case 1:
                 buscarCoche();
-                return false;
+                break;
             case 2:
                 listarCoches();
-                return false;
+                break;
             case 3:
                 registrarCoche();
-                return false;
+                break;
             case 4:
                 modificarCoche();
-                return false;
+                break;
             case 5:
                 eliminarCoche();
-                return false;
+                break;
             case 6:
                 System.out.println("+---------------------------------------------------+");
                 System.out.println("|                  FIN DEL PROGRAMA                 |");
                 System.out.println("+---------------------------------------------------+");
+                return true;
         }
-        return true;
+        return false;
     }
 
     private static void buscarCoche() {
         System.out.println("|-------------- [BUSQUEDA COCHE POR MATRICULA] --------------|");
-        String matricula = GestorConcesionario.pedirString("Introduzca la matricula del coche: ", 10);
+        String matricula = GestorConcesionario.pedirString(
+                "Introduzca la matricula del coche: ", 10);
         Coche cocheBuscado = GestorConcesionario.obtenerCoche(conexionBBDD, matricula);
         if(cocheBuscado != null){
             System.out.println("[COCHE ENCONTRADO]");
@@ -143,7 +143,8 @@ public class Main {
 
     private static void modificarCoche() {
         System.out.println("|-------------- [MODIFICAR COCHE] --------------|");
-        String matricula = GestorConcesionario.pedirString("Escriba la matricula del coche que desee modificar: ", 10);
+        String matricula = GestorConcesionario.pedirString(
+                "Escriba la matricula del coche que desee modificar: ", 10);
         if(cocheExiste(matricula)) {
             System.out.println("[DATOS ACTUALES DEL COCHE]");
             System.out.println(GestorConcesionario.obtenerCoche(conexionBBDD, matricula));
@@ -157,7 +158,8 @@ public class Main {
 
     private static void eliminarCoche() {
         System.out.println("|-------------- [ELIMINAR COCHE] --------------|");
-        String matricula = GestorConcesionario.pedirString("Introduzca la matricula del coche: ", 10);
+        String matricula = GestorConcesionario.pedirString(
+                "Introduzca la matricula del coche: ", 10);
         if(cocheExiste(matricula)) {
             GestorConcesionario.eliminarCoche(conexionBBDD, matricula);
         } else {

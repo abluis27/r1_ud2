@@ -139,43 +139,51 @@ public class GestorConcesionario {
 
     // Insertado de coches en la BBDD
     public static void registrarCoche(Connection conexionBBDD, Coche coche) {
-        String lineaSQL = "INSERT INTO " + TABLA_COCHES + "(matricula, marca, modelo, año) VALUES(?, ?, ?, ?)";
+        String lineaSQL = "INSERT INTO " + TABLA_COCHES
+                + "(matricula, marca, modelo, año) VALUES(?, ?, ?, ?)";
         try (PreparedStatement insertStatement = conexionBBDD.prepareStatement(lineaSQL)) {
             insertStatement.setString(1, coche.getMatricula());
             insertStatement.setString(2, coche.getMarca());
             insertStatement.setString(3, coche.getModelo());
             insertStatement.setInt(4, coche.getAnyo());
             insertStatement.executeUpdate();
-            System.out.println("El coche con la matricula " + coche.getMatricula() + " ha sido registrado");
+            System.out.println("El coche con la matricula "
+                    + coche.getMatricula() + " ha sido registrado");
         } catch (SQLException e) {
-            System.out.println("La matricula " + coche.getMatricula() + " ya esta registrada en la base de datos");
+            System.out.println("La matricula " + coche.getMatricula()
+                    + " ya esta registrada en la base de datos");
         }
     }
 
     // Modificacion de coche
     public static void modificarCoche(Connection conexionBBDD, String matricula, int numeroAtributo) {
         String campoACambiar = obtenerCampo(numeroAtributo);
-        String lineaSQL = "UPDATE " + TABLA_COCHES + " SET " + campoACambiar + " = ? WHERE matricula = ?";
+        String lineaSQL = "UPDATE " + TABLA_COCHES
+                + " SET " + campoACambiar + " = ? WHERE matricula = ?";
 
         try (PreparedStatement updateStatement = conexionBBDD.prepareStatement(lineaSQL)) {
             asignarNuevoValor(updateStatement, numeroAtributo);
             updateStatement.setString(2, matricula);
             updateStatement.executeUpdate();
-            System.out.println("El coche con la matricula " + matricula + " ha sido modificado");
+            System.out.println("El coche con la matricula "
+                    + matricula + " ha sido modificado");
         } catch (SQLException e) {
             System.out.println("No se pudo modificar el coche con la matricula " + matricula);
 
         }
     }
 
-    private static void asignarNuevoValor(PreparedStatement updateStatement, int numeroAtributo) throws SQLException {
+    private static void asignarNuevoValor(
+            PreparedStatement updateStatement, int numeroAtributo) throws SQLException {
         switch (numeroAtributo) {
             case 1:
-                String marca = pedirString("Introduzca la marca del coche: ", 50);
+                String marca = pedirString(
+                        "Introduzca la marca del coche: ", 50);
                 updateStatement.setString(1, marca);
                 break;
             case 2:
-                String modelo = pedirString("Introduzca el modelo del coche: ", 50);
+                String modelo = pedirString(
+                        "Introduzca el modelo del coche: ", 50);
                 updateStatement.setString(1, modelo);
                 break;
             case 3:
@@ -203,11 +211,13 @@ public class GestorConcesionario {
 
     // Eliminar coche
     public static void eliminarCoche(Connection conexionBBDD, String matricula) {
-        String lineaSQL = "DELETE FROM " + TABLA_COCHES + " WHERE matricula = ?";
+        String lineaSQL = "DELETE FROM "
+                + TABLA_COCHES + " WHERE matricula = ?";
         try (PreparedStatement deleteStatement = conexionBBDD.prepareStatement(lineaSQL)) {
             deleteStatement.setString(1, matricula);
             deleteStatement.executeUpdate();
-            System.out.println("El coche con la matricula " + matricula + " ha sido eliminado");
+            System.out.println("El coche con la matricula "
+                    + matricula + " ha sido eliminado");
         } catch (SQLException e) {
             System.out.println("No se pudo eliminar el coche con la matricula " + matricula);
         }
