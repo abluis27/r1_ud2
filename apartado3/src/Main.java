@@ -7,13 +7,13 @@ import java.util.Scanner;
 
 public class Main {
     private static Connection conexionBBDD;
-    private static final String urlDB = "jdbc:mysql://localhost:3306/adat7";
+    private static final String urlBBDD = "jdbc:mysql://localhost:3306/adat7";
     private static final String usuario = "dam2";
     private static final String password = "asdf.1234";
     private static int opcion;
 
     public static void main(String[] args) {
-        conexionBBDD = obtenerConexionBBDD(urlDB, usuario, password);
+        conexionBBDD = obtenerConexionBBDD(urlBBDD, usuario, password);
         GestorConcesionario.inicializarBBDD(conexionBBDD);
         opcion = 0;
         boolean salir = false;

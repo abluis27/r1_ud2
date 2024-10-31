@@ -27,7 +27,7 @@ public class GestorConcesionario {
             valor = entrada.nextLine();
             valorValido = esStringValido(valor, longitudMax);
         }
-        return valor;
+        return valor.trim();
     }
 
     public static int pedirAnyo() {
